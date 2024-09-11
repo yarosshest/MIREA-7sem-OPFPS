@@ -1,0 +1,251 @@
+\graphicspath{{/img}} % path to graphics
+
+\section*{\LARGE Введение}
+\addcontentsline{toc}{section}{Введение}
+
+Zabbix — это универсальный инструмент мониторинга, способный
+отслеживать динамику работы серверов и сетевого оборудования, быстро
+реагировать на внештатные ситуации и предупреждать возможные проблемы
+с нагрузкой.
+Система мониторинга Zabbix может собирать статистику в
+указанной рабочей среде и действовать в определенных случаях заданным
+образом.
+Zabbix бесплатен.
+Zabbix написан и распространяется под лицензией
+GPL General Public License версии 2.
+Это означает, что его исходный код
+свободно распространяется и доступен для неограниченного круга лиц
+
+\textbf{Цель работы} --- познакомится с системой мониторинга инфраструктуры Zabbix.
+
+\clearpage
+
+\section*{\LARGE Выполнение практической работы}
+\addcontentsline{toc}{section}{Выполнение практической работы}
+
+\section{Описание используемого программного обеспечения и сетевая топология его
+развертывания}
+\subsection{ Создайте 2 виртуальные машины под управлением OS GNU Linux и
+настройте их видимость в локальной сети}
+
+Для выполнения практической работы был создан \texttt{docker-compose} файл.
+
+\lstinputlisting[language=yaml]{src//docker-compose.yml}
+
+Для видимости их в 1 сети была создана сеть \texttt{zabbix-net}
+
+\subsection{На одной из них установите Zabbix server. Для его работы потребуется
+установить и настроить также БД}
+
+БД было развернуто в сервисе \texttt{postgres-server} Zabbix server развернут в \texttt{zabbix-server-pgsql}
+
+\subsection{На второй (исследуемой) машине установите и настройте Zabbix agent}
+
+Агент развернут в сервисе \texttt{zabbix-agent}.
+Образ был модифицирован утилитами для проведения нагрузочного тестирования
+
+\lstinputlisting[language=yaml]{src//Dockerfile}
+
+\section{Настройка системы мониторинга и описание собираемых параметров.
+Описание параметров мониторинга и целей, на которое оно направлено.}
+
+\subsection{Подключитесь с хоста виртуализации к серверу Zabbix, настройте хост
+машины с Zabbix agent и создайте дашборд с ключевыми метриками:
+утилизация cpu, утилизация ram, утилизация disk и время чтения и записи disk}
+
+Настроим соединение с агентом, выбрав адрес DNS и порт.
+\begin{image}
+    \includegrph{img//host-conf.png}
+    \caption{Соединение с агентом}
+    \label{fig:host-conf}
+\end{image}
+
+На главном экране видим успешное соединение.
+
+\begin{image}
+    \includegrph{img//main-dash-board.png}
+    \caption{Успешное соединение.м}
+    \label{fig:main-dash-board}
+\end{image}
+
+
+Добавим метрики чтения с диска и записи.
+
+\begin{image}
+    \includegrph{img//read-conf.png}
+    \caption{Чтене с диска}
+    \label{fig:read-conf}
+\end{image}
+
+\begin{image}
+    \includegrph{img//write-conf.png}
+    \caption{Чтене запись на диск}
+    \label{fig:write-conf}
+\end{image}
+
+Создадим дашборд с графиком cpu.
+Выбираем вид статистики и ее название.
+
+\begin{image}
+    \includegrph{img//cpu-hed.png}
+    \caption{Вид статистики и ее названиа}
+    \label{fig:cpu-hed}
+\end{image}
+
+Выбираем хост и его метрики
+
+\begin{image}
+    \includegrph{img//cpu-bot.png}
+    \caption{Xост и его метрики}
+    \label{fig:cpu-bot}
+\end{image}
+
+Повторяем аналогичные действия для всех нужных нам параметров.
+И получаем необходимой дашборд.
+
+\begin{image}
+    \includegrph{img//alldash-board.png}
+    \caption{Xост и его метрики}
+    \label{fig:alldash-board.png}
+\end{image}
+
+
+\subsection{Запустите htop и iotop на исследуемой машине}
+
+Подключаемся к необходимому контейнеру и запускаем команды.
+Вместо iotop был запущен iostat.
+
+\begin{image}
+    \includegrph{img//htop.png}
+    \caption{htop}
+    \label{fig:htop}
+\end{image}
+
+\begin{image}
+    \includegrph{img//iostat.png}
+    \caption{iostat}
+    \label{fig:iostat}
+\end{image}
+\section{Симуляция нагрузки на систему. Анализ полученных в ходе работы
+результатов.}
+\subsection{Проведите 3 стресс-тестирования с помощью утилиты stress-ng: на cpu, ram и
+disk}
+
+Для теста cpu была запущенна команда:
+
+\begin{lstlisting}[language=bash]
+stress-ng --cpu 16 --cpu-method matrixprod --metrics --timeout 60
+\end{lstlisting}
+
+
+Для теста ram была запущенна команда:
+
+\begin{lstlisting}[language=bash]
+stress-ng --sequential 0 --class memory --timeout 60s --metrics-brief
+\end{lstlisting}
+
+
+Для теста disk была запущенна команда:
+
+\begin{lstlisting}[language=bash]
+stress-ng --sequential 0 --class io --timeout 60s --metrics-brief
+\end{lstlisting}
+
+\subsection{Сравните показатели мониторинга на исследуемой машине  и на сервере Zabbix}
+
+Тест cpu.
+
+\begin{image}
+    \includegrph{img//stress_cpu.png}
+    \caption{cpu в контейнере}
+    \label{fig:stress_cpu}
+\end{image}
+
+\begin{image}
+    \includegrph{img//stress_cpu_zab.png}
+    \caption{cpu в zabbix}
+    \label{fig:stress_cpu_zab}
+\end{image}
+
+\clearpage
+
+
+Тест ram.
+
+\begin{image}
+    \includegrph{img//stress_ram.png}
+    \caption{ram в контейнере}
+    \label{fig:stress_ram}
+\end{image}
+
+\begin{image}
+    \includegrph{img//stress_ram.png}
+    \caption{ram в zabbix}
+    \label{fig:stress_ram_zab}
+\end{image}
+
+\clearpage
+
+Тест disk.
+
+\begin{image}
+    \includegrph{img//stress_disk.png}
+    \caption{disk в контейнере}
+    \label{fig:stress_disk}
+\end{image}
+
+\begin{image}
+    \includegrph{img//stress_zabbix_disk.png}
+    \caption{disk в zabbix}
+    \label{fig:stress_zabbix_disk}
+\end{image}
+
+
+
+
+\clearpage
+
+\section*{\LARGE Вывод}
+\addcontentsline{toc}{section}{Вывод}
+В результате практической работы была изучена работа
+с Zabbix.\par
+Было изучено: создание и настройка хостов, своих метрик, создание дашборда.
+Были проделаны стресс тесты и проверенна работа Zabbix.
+
+\clearpage
+
+\section{Ответы на контрольные вопросы}
+\subsection{Возможности системы мониторинга Zabbix}
+Основные возможности
+Функционал включает в себя общие проверки для наиболее распространенных
+сервисов, в том числе СУБД, SSH, Telnet, VMware, NTP, POP, SMTP, FTP и
+т.д. Если стандартных настроек системы недостаточно, их можно изменить
+самостоятельно или же пользоваться дополнением через API.
+Стандартные функции системы:
+• Контроль нагрузки на процессор, касается и отдельных процессов.
+• Сбор данных об объеме свободной оперативной и физической памяти.
+• Мониторинг активности жесткого диска.
+• Мониторинг сетевой активности.
+• Пинг для проверки доступности узлов в сети
+
+\subsection{Архитектура системы Zabbix. Задачи сервера Zabbix}
+У Zabbix есть 4 основных инструмента, с помощью которых можно
+мониторить определенную рабочую среду и собирать о ней полный пакет
+данных для оптимизации работы.
+Сервер, Прокси, Агент, Веб-интерфейс.
+• Сервер — ядро, хранящее в себе все данные системы, включая
+статистические, оперативные и конфигурацию. Дистанционно управляет
+сетевыми сервисами, оповещает администратора о существующих проблемах
+с оборудованием, находящимся под наблюдением.
+\subsection{Архитектура системы Zabbix. Задачи агента Zabbix.}
+Агент — программа (демон), которая активно мониторит и собирает
+статистику работы локальных ресурсов (накопители, оперативная память,
+процессор и др.) и приложений.
+
+\subsection{Развертывание системы в случае с безагентским мониторингом}
+Если используется безагентский
+метод, то основной модуль системы мониторинга сам обращается к целевым
+узлам и забирает с них нужные метрики.
+Далее собранные метрики
+передаются в модуль обработки и аналитики данных, и сохраняются в
+хранилище.

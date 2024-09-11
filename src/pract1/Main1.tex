@@ -1,0 +1,19 @@
+\documentclass[14pt,a4paper,oneside]{extarticle}
+
+\usepackage{../Settings/Style}
+
+\date{\today}
+
+\begin{document}
+    \renewcommand{\figurename}{Рисунок}
+    \renewcommand{\contentsname}{Содержание}
+    \renewcommand{\bibname}{Список литературы}
+
+%    \includepdf[pages=-]{T.pdf}
+    \include{./Settings/title.tex}
+    \tableofcontents
+
+    \clearpage
+    \include{report}
+
+\end{document}

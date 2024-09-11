@@ -1,0 +1,71 @@
+version: '3.8'
+
+networks:
+  zabbix-net:
+    driver: bridge
+
+services:
+
+
+  zabbix-agent:
+    image: zabbix/zabbix-agent:alpine-6.0-latest
+    container_name: zabbix-agent
+    build:
+      dockerfile: Dockerfile
+      context: .
+    ports:
+      - "10050:10050"
+    environment:
+      ZBX_SERVER_HOST: "127.0.0.1,localhost,zabbix-server-pgsql"
+    networks:
+      - zabbix-net
+
+  postgres-server:
+    image: postgres:latest
+    container_name: postgres-server
+    environment:
+      POSTGRES_USER: "zabbix"
+      POSTGRES_PASSWORD: "zabbix_pwd"
+      POSTGRES_DB: "zabbix"
+    networks:
+      - zabbix-net
+    restart: unless-stopped
+
+  zabbix-server-pgsql:
+    image: zabbix/zabbix-server-pgsql:alpine-6.0-latest
+    container_name: zabbix-server-pgsql
+    environment:
+      DB_SERVER_HOST: "postgres-server"
+      POSTGRES_USER: "zabbix"
+      POSTGRES_PASSWORD: "zabbix_pwd"
+      POSTGRES_DB: "zabbix"
+      ZBX_ENABLE_SNMP_TRAPS: "true"
+    ports:
+      - "10051:10051"
+    volumes:
+      - zabbix-snmptraps:/var/lib/zabbix/snmptraps
+    networks:
+      - zabbix-net
+#    restart: unless-stopped
+
+  zabbix-web-nginx-pgsql:
+    image: zabbix/zabbix-web-nginx-pgsql:alpine-6.0-latest
+    container_name: zabbix-web-nginx-pgsql
+    environment:
+      ZBX_SERVER_HOST: "zabbix-server-pgsql"
+      DB_SERVER_HOST: "postgres-server"
+      POSTGRES_USER: "zabbix"
+      POSTGRES_PASSWORD: "zabbix_pwd"
+      POSTGRES_DB: "zabbix"
+    ports:
+      - "80:8080"
+      - "443:8443"
+    volumes:
+      - /etc/ssl/nginx:/etc/ssl/nginx:ro
+    networks:
+      - zabbix-net
+    restart: unless-stopped
+
+volumes:
+  zabbix-snmptraps:
+
