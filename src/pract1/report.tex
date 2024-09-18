@@ -33,6 +33,7 @@ GPL General Public License версии 2.
 \lstinputlisting[language=yaml]{src//docker-compose.yml}
 
 Для видимости их в 1 сети была создана сеть \texttt{zabbix-net}
+\clearpage
 
 \subsection{На одной из них установите Zabbix server. Для его работы потребуется
 установить и настроить также БД}
@@ -45,6 +46,7 @@ GPL General Public License версии 2.
 Образ был модифицирован утилитами для проведения нагрузочного тестирования
 
 \lstinputlisting[language=yaml]{src//Dockerfile}
+\clearpage
 
 \section{Настройка системы мониторинга и описание собираемых параметров.
 Описание параметров мониторинга и целей, на которое оно направлено.}
@@ -53,23 +55,26 @@ GPL General Public License версии 2.
 машины с Zabbix agent и создайте дашборд с ключевыми метриками:
 утилизация cpu, утилизация ram, утилизация disk и время чтения и записи disk}
 
-Настроим соединение с агентом, выбрав адрес DNS и порт.
+Настроим соединение с агентом, выбрав адрес DNS и порт (Рисунок~\ref{fig:host-conf}).
+
+
 \begin{image}
     \includegrph{img//host-conf.png}
     \caption{Соединение с агентом}
     \label{fig:host-conf}
 \end{image}
 
-На главном экране видим успешное соединение.
+На главном экране видим успешное соединение (Рисунок~\ref{fig:main-dash-board}).
 
 \begin{image}
     \includegrph{img//main-dash-board.png}
-    \caption{Успешное соединение.м}
+    \caption{Успешное соединение}
     \label{fig:main-dash-board}
 \end{image}
 
+\clearpage
 
-Добавим метрики чтения с диска и записи.
+Добавим метрики чтения с диска и записи (Рисунки~\ref{fig:read-conf} -~\ref{fig:write-conf}).
 
 \begin{image}
     \includegrph{img//read-conf.png}
@@ -83,8 +88,10 @@ GPL General Public License версии 2.
     \label{fig:write-conf}
 \end{image}
 
+\clearpage
+
 Создадим дашборд с графиком cpu.
-Выбираем вид статистики и ее название.
+Выбираем вид статистики и ее название (Рисунок~\ref{fig:cpu-hed}).
 
 \begin{image}
     \includegrph{img//cpu-hed.png}
@@ -92,7 +99,7 @@ GPL General Public License версии 2.
     \label{fig:cpu-hed}
 \end{image}
 
-Выбираем хост и его метрики
+Выбираем хост и его метрики (Рисунок~\ref{fig:cpu-bot}).
 
 \begin{image}
     \includegrph{img//cpu-bot.png}
@@ -101,19 +108,20 @@ GPL General Public License версии 2.
 \end{image}
 
 Повторяем аналогичные действия для всех нужных нам параметров.
-И получаем необходимой дашборд.
+И получаем необходимой дашборд (Рисунок~\ref{fig:alldash-board}).
 
 \begin{image}
     \includegrph{img//alldash-board.png}
     \caption{Xост и его метрики}
-    \label{fig:alldash-board.png}
+    \label{fig:alldash-board}
 \end{image}
 
+\clearpage
 
 \subsection{Запустите htop и iotop на исследуемой машине}
 
 Подключаемся к необходимому контейнеру и запускаем команды.
-Вместо iotop был запущен iostat.
+Вместо iotop был запущен iostat (Рисунки~\ref{fig:htop} -~\ref{fig:iostat}).
 
 \begin{image}
     \includegrph{img//htop.png}
@@ -126,6 +134,9 @@ GPL General Public License версии 2.
     \caption{iostat}
     \label{fig:iostat}
 \end{image}
+
+\clearpage
+
 \section{Симуляция нагрузки на систему. Анализ полученных в ходе работы
 результатов.}
 \subsection{Проведите 3 стресс-тестирования с помощью утилиты stress-ng: на cpu, ram и
@@ -153,7 +164,7 @@ stress-ng --sequential 0 --class io --timeout 60s --metrics-brief
 
 \subsection{Сравните показатели мониторинга на исследуемой машине  и на сервере Zabbix}
 
-Тест cpu.
+Тест cpu (Рисунки~\ref{fig:stress_cpu} -~\ref{fig:stress_cpu_zab}).
 
 \begin{image}
     \includegrph{img//stress_cpu.png}
@@ -170,7 +181,7 @@ stress-ng --sequential 0 --class io --timeout 60s --metrics-brief
 \clearpage
 
 
-Тест ram.
+Тест ram \rdref{fig:stress_ram}{fig:stress_ram_zab}.
 
 \begin{image}
     \includegrph{img//stress_ram.png}
@@ -179,14 +190,14 @@ stress-ng --sequential 0 --class io --timeout 60s --metrics-brief
 \end{image}
 
 \begin{image}
-    \includegrph{img//stress_ram.png}
+    \includegrph{img//stress_ram_zab.png}
     \caption{ram в zabbix}
     \label{fig:stress_ram_zab}
 \end{image}
 
 \clearpage
 
-Тест disk.
+Тест disk \rdref{fig:stress_disk}{fig:stress_ram_zab}.
 
 \begin{image}
     \includegrph{img//stress_disk.png}
@@ -201,7 +212,9 @@ stress-ng --sequential 0 --class io --timeout 60s --metrics-brief
 \end{image}
 
 
-
+Исходя и выше запущенных тестов мы можем заметить что Zabbix передает актуальную информацию, но с задержкой.
+Нагрузка на CPU в Zabbix предоставляется по средний нагрузки на процессор, в то время как в htop по каждому логическому
+ядру процессора.
 
 \clearpage
 
