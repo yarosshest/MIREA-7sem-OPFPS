@@ -1,0 +1,20 @@
+@startuml
+actor PythonApp as "Приложение Python"
+database LogFile as "Лог-файл"
+
+node Promtail {
+}
+
+node Loki {
+  port "3100" as LokiPort
+}
+
+node Grafana {
+  port "3000" as GrafanaPort
+}
+
+PythonApp --> LogFile : пишет логи
+LogFile --> Promtail : "отправка логов"
+Promtail --> Loki : "отправка логов"
+Grafana --> LokiPort : "запрос данных"
+@enduml

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml-stylesheet href="file:///C:/Program Files (x86)/Nmap/nmap.xsl" type="text/xsl"?><nmaprun args="nmap -sn 192.168.22.0/24" profile_name="" scanner="nmap" start="1730190543" startstr="Tue Oct 29 11:29:03 2024" version="7.95" xmloutputversion="1.04"><verbose level="0"></verbose><debugging level="0"></debugging><output type="interactive">Starting Nmap 7.95 ( https://nmap.org ) at 2024-10-29 11:29 RTZ 2 (çèìà)
+Nmap scan report for 192.168.22.131
+Host is up (0.00013s latency).
+MAC Address: 00:0C:29:D4:BB:F5 (VMware)
+Nmap scan report for 192.168.22.254
+Host is up (0.00092s latency).
+MAC Address: 00:50:56:E0:7E:8C (VMware)
+Nmap scan report for 192.168.22.1
+Host is up.
+Nmap done: 256 IP addresses (3 hosts up) scanned in 7.14 seconds
+</output><host comment=""><status state="up"></status><address addr="192.168.22.131" vendor="" addrtype="ipv4"></address><address addr="00:0C:29:D4:BB:F5" vendor="VMware" addrtype="mac"></address><hostnames></hostnames><ports></ports><os></os><uptime seconds="" lastboot=""></uptime><tcpsequence index="" difficulty="" values=""></tcpsequence><ipidsequence class="" values=""></ipidsequence><tcptssequence class="" values=""></tcptssequence></host><host comment=""><status state="up"></status><address addr="192.168.22.254" vendor="" addrtype="ipv4"></address><address addr="00:50:56:E0:7E:8C" vendor="VMware" addrtype="mac"></address><hostnames></hostnames><ports></ports><os></os><uptime seconds="" lastboot=""></uptime><tcpsequence index="" difficulty="" values=""></tcpsequence><ipidsequence class="" values=""></ipidsequence><tcptssequence class="" values=""></tcptssequence></host><host comment=""><status state="up"></status><address addr="192.168.22.1" vendor="" addrtype="ipv4"></address><hostnames></hostnames><ports></ports><os></os><uptime seconds="" lastboot=""></uptime><tcpsequence index="" difficulty="" values=""></tcpsequence><ipidsequence class="" values=""></ipidsequence><tcptssequence class="" values=""></tcptssequence></host><runstats><finished time="1730190550" timestr="Tue Oct 29 11:29:10 2024"></finished><hosts up="3" down="253" total="256"></hosts></runstats></nmaprun>

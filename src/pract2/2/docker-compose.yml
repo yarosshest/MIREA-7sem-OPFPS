@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  webapp:
+    build: .
+    ports:
+      - "8000:8000"
+    networks:
+      - monitoring
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    ports:
+      - "8080:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    networks:
+      - monitoring
+    deploy:
+      resources:
+        limits:
+          cpus: '0.2'
+          memory: 512M
+
+  prometheus:
+    image: prom/prometheus:latest
+    command: --config.file=/etc/prometheus/prometheus.yml
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - monitoring
+    deploy:
+      resources:
+        limits:
+          cpus: '0.3'
+          memory: 256M
+
+  grafana:
+    image: grafana/grafana:latest
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - monitoring
+    deploy:
+      resources:
+        limits:
+          cpus: '0.3'
+          memory: 256M
+
+networks:
+  monitoring:
+    driver: bridge
+
+volumes:
+  grafana-storage:
+

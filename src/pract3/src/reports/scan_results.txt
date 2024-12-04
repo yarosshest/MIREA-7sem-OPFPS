@@ -1,0 +1,13 @@
+# Nmap 7.80 scan initiated Mon Oct 14 20:17:14 2024 as: nmap -sP -oN scan_results.txt 192.168.1.0/24
+Nmap scan report for InnboxG84 (192.168.1.1)
+Host is up (0.0023s latency).
+MAC Address: 54:C2:50:CC:28:08 (Unknown)
+Nmap scan report for 192.168.1.11
+Host is up (0.00021s latency).
+MAC Address: 08:00:27:10:DA:AB (Oracle VirtualBox virtual NIC)
+Nmap scan report for 192.168.1.13
+Host is up (0.21s latency).
+MAC Address: 52:BC:50:83:C9:06 (Unknown)
+Nmap scan report for ASUSVivoBook (192.168.1.10)
+Host is up.
+# Nmap done at Mon Oct 14 20:17:17 2024 -- 256 IP addresses (4 hosts up) scanned in 2.26 seconds

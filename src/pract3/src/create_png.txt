@@ -1,0 +1,2 @@
+dot -Tpng network_graph.dot -o network_graph.png
+
